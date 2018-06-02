@@ -9,22 +9,39 @@
 import UIKit
 import Foundation
 import CoreData
+import MapKit
 
 class ViewController: UIViewController{
 
-    
-    
+    @IBOutlet weak var myMapView: MKMapView!
+    var locationManager = CLLocationManager()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        getData()
         
+        locationManager.requestAlwaysAuthorization()
         
+        locationManager.startUpdatingLocation()
         
-        
-        
+        self.getData()
     }
     
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        let center = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
+        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025))
+        
+        myMapView.setRegion(region, animated: true)
+    }
+    
+    func setAnnotation(station: VilloStation){
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = CLLocationCoordinate2D(latitude: station.lat,longitude: station.lng)
+        annotation.title = station.name
+        annotation.subtitle = station.address
+     
+        self.myMapView.addAnnotation(annotation)
+    }
     
     func getData(){
     
@@ -50,6 +67,19 @@ class ViewController: UIViewController{
                     DispatchQueue.main.async {
                         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
                         let managedContext = appDelegate.persistentContainer.viewContext
+                        
+                        let delstationFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "VilloStation")
+                        let delopgehaaldeStations:[VilloStation]
+                        do{
+                            delopgehaaldeStations = try managedContext.fetch(delstationFetch) as! [VilloStation]
+                            for station in delopgehaaldeStations{
+                                managedContext.delete(station)
+                            }
+                            try! managedContext.save()
+                        }catch {
+                            print("Error")
+                        }
+                        
                         for station in json {
                             let id = station["number"] as? Int16
                             let name = station["name"] as? String
@@ -76,6 +106,17 @@ class ViewController: UIViewController{
                         }catch {
                             fatalError("could not save")
                         }
+                        let stationFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "VilloStation")
+                        let opgehaaldeStations:[VilloStation]
+                        do{
+                            opgehaaldeStations = try managedContext.fetch(stationFetch) as! [VilloStation]
+                            for station in opgehaaldeStations{
+                                self.setAnnotation(station: station)
+                            }
+                        }catch {
+                                print("Error")
+                        }
+                        
                     }
                 }
             } catch let error {

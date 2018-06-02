@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ines_Vermeir_digx_werkstuk2/ViewController.swift"
-            timestampString = "549651459.107558"
+            timestampString = "549662925.408039"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "getData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ines_Vermeir_digx_werkstuk2/ViewController.swift"
-            timestampString = "549651459.108552"
+            timestampString = "549662925.409649"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
             landmarkName = "getData()"
             landmarkType = "7">
          </BreakpointContent>
