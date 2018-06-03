@@ -50,6 +50,8 @@
                     </view>
                     <connections>
                         <outlet property="myMapView" destination="Umi-Hw-vyr" id="cVE-Fh-0cW"/>
+                        <outlet property="titleApp" destination="bDM-zl-rNP" id="r8S-MG-AXk"/>
+                        <outlet property="updateButton" destination="0Gt-PC-Djn" id="Jq3-f0-kxg"/>
                         <outlet property="updateTime" destination="5ee-pD-nUv" id="8fQ-Yt-I9g"/>
                     </connections>
                 </viewController>

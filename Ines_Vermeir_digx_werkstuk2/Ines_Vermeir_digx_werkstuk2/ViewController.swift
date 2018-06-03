@@ -16,6 +16,8 @@ class ViewController: UIViewController,  MKMapViewDelegate {
     @IBOutlet weak var myMapView: MKMapView!
     var locationManager = CLLocationManager()
     @IBOutlet weak var updateTime: UILabel!
+    @IBOutlet weak var titleApp: UILabel!
+    @IBOutlet weak var updateButton: UIButton!
     
     @IBAction func update(_ sender: Any) {
         self.getData()
@@ -28,6 +30,10 @@ class ViewController: UIViewController,  MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        self.titleApp.text = NSLocalizedString("title", comment: "")
+        self.updateTime.text = NSLocalizedString("last_update", comment: "")
+        self.updateButton.titleLabel?.text = NSLocalizedString("update", comment: "")
         
         locationManager.requestAlwaysAuthorization()
         
@@ -127,7 +133,7 @@ class ViewController: UIViewController,  MKMapViewDelegate {
                             fatalError("could not save")
                         }
                         let today = Date()
-                        self.updateTime.text = today.toString(dateFormat: "yyyy-MM-dd HH:mm:ss")
+                        self.updateTime.text = self.updateTime.text! + today.toString(dateFormat: "yyyy-MM-dd HH:mm:ss")
                         let stationFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "VilloStation")
                         let opgehaaldeStations:[VilloStation]
                         do{
