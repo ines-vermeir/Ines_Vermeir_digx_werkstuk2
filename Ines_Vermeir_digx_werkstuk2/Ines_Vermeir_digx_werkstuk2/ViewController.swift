@@ -61,24 +61,31 @@ class ViewController: UIViewController,  MKMapViewDelegate {
     //set region
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         let center = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
-        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025))
         
-        myMapView.setRegion(region, animated: true)
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let region = MKCoordinateRegion(center: center, span: span)
+        mapView.setRegion(region, animated: true)
     }
     
-    //action when annotation is tapped
+    //info when annotation tapped (not working)
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        let station = view.annotation as! VilloStation
-        self.nameStation.text = station.name
-        self.addressStation.text = NSLocalizedString("address", comment: "") + ": " + station.address!
+        
+        let annotation = view.annotation as! MKPointAnnotation
+        
+        let villo = annotation.title
+        
+        print(villo!)
+        self.nameStation.text = villo
         
     }
+
+    
     
     //add annotation
     func setAnnotation(station: VilloStation){
         let annotation = MKPointAnnotation()
         annotation.coordinate = CLLocationCoordinate2D(latitude: station.lat,longitude: station.lng)
-        //annotation.title = station.name
+        annotation.title = station.name
         //annotation.subtitle = station.address
      
         self.myMapView.addAnnotation(annotation)
@@ -122,6 +129,10 @@ class ViewController: UIViewController,  MKMapViewDelegate {
                         }catch {
                             print("Error")
                         }
+                        
+                        //delete annotations
+                        let allAnnotations = self.myMapView.annotations
+                        self.myMapView.removeAnnotations(allAnnotations)
                         
                         //get all from json
                         for station in json {
