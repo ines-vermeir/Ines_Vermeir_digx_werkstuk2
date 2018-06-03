@@ -11,11 +11,20 @@ import Foundation
 import CoreData
 import MapKit
 
-class ViewController: UIViewController{
+class ViewController: UIViewController,  MKMapViewDelegate {
 
     @IBOutlet weak var myMapView: MKMapView!
     var locationManager = CLLocationManager()
-
+    @IBOutlet weak var updateTime: UILabel!
+    
+    @IBAction func update(_ sender: Any) {
+        self.getData()
+        
+    }
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -25,6 +34,7 @@ class ViewController: UIViewController{
         locationManager.startUpdatingLocation()
         
         self.getData()
+        
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
@@ -34,11 +44,21 @@ class ViewController: UIViewController{
         myMapView.setRegion(region, animated: true)
     }
     
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let station = view.annotation as! VilloStation
+        let placeName = station.name
+        let placeInfo = station.address
+        
+        let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
+    }
+    
     func setAnnotation(station: VilloStation){
         let annotation = MKPointAnnotation()
         annotation.coordinate = CLLocationCoordinate2D(latitude: station.lat,longitude: station.lng)
-        annotation.title = station.name
-        annotation.subtitle = station.address
+        //annotation.title = station.name
+        //annotation.subtitle = station.address
      
         self.myMapView.addAnnotation(annotation)
     }
@@ -106,6 +126,8 @@ class ViewController: UIViewController{
                         }catch {
                             fatalError("could not save")
                         }
+                        let today = Date()
+                        self.updateTime.text = today.toString(dateFormat: "yyyy-MM-dd HH:mm:ss")
                         let stationFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "VilloStation")
                         let opgehaaldeStations:[VilloStation]
                         do{
@@ -136,3 +158,13 @@ class ViewController: UIViewController{
 
 }
 
+extension Date
+{
+    func toString( dateFormat format  : String ) -> String
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
+    
+}

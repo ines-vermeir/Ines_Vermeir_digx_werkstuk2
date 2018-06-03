@@ -40,6 +40,9 @@
                                 <rect key="frame" x="16" y="443" width="84" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Update"/>
+                                <connections>
+                                    <action selector="update:" destination="BYZ-38-t0r" eventType="touchUpInside" id="InN-YG-jAu"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -47,6 +50,7 @@
                     </view>
                     <connections>
                         <outlet property="myMapView" destination="Umi-Hw-vyr" id="cVE-Fh-0cW"/>
+                        <outlet property="updateTime" destination="5ee-pD-nUv" id="8fQ-Yt-I9g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
