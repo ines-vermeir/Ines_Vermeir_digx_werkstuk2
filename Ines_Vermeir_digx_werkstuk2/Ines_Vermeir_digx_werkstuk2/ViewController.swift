@@ -70,7 +70,7 @@ class ViewController: UIViewController,  MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let station = view.annotation as! VilloStation
         self.nameStation.text = station.name
-        self.addressStation.text = station.address
+        self.addressStation.text = NSLocalizedString("address", comment: "") + ": " + station.address!
         
     }
     
