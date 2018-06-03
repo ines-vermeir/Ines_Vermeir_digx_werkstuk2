@@ -18,6 +18,11 @@ class ViewController: UIViewController,  MKMapViewDelegate {
     @IBOutlet weak var updateTime: UILabel!
     @IBOutlet weak var titleApp: UILabel!
     @IBOutlet weak var updateButton: UIButton!
+    @IBOutlet weak var nameStation: UILabel!
+    @IBOutlet weak var addressStation: UILabel!
+    @IBOutlet weak var statusStation: UILabel!
+    @IBOutlet weak var availableSation: UILabel!
+    
     
     var pointAnnotation:myAnnotation!
     var pinAnnotationView:MKPinAnnotationView!
@@ -37,57 +42,22 @@ class ViewController: UIViewController,  MKMapViewDelegate {
          self.updateButton.setTitle(NSLocalizedString("update", comment: ""), for: UIControlState.normal)
         
         //maps
-        locationManager.delegate = (self as! CLLocationManagerDelegate)
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
-        
-        myMapView.delegate = self
-        myMapView.mapType = MKMapType.standard
         myMapView.showsUserLocation = true
         
         //get stations
         self.getData()
         
+        /*let alertController = UIAlertController(title: "iOScreator", message:
+            "Hello, world!", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
+        
+        self.present(alertController, animated: true, completion: nil)*/
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations userLocation: MKUserLocation) {
-        let location = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
-        let center = location
-        let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025))
-        myMapView.setRegion(region, animated: true)
-        
-        pointAnnotation = myAnnotation()
-        pointAnnotation.imgPin = "Pokemon Pin"
-        pointAnnotation.coordinate = location
-        pointAnnotation.title = "POKéSTOP"
-        pointAnnotation.subtitle = "Pick up some Poké Balls"
-        
-        pinAnnotationView = MKPinAnnotationView(annotation: pointAnnotation, reuseIdentifier: "pin")
-        myMapView.addAnnotation(pinAnnotationView.annotation!)
-    }
+
     
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        print(error.localizedDescription)
-    }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuseIdentifier = "pin"
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
-        
-        if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
-            annotationView?.canShowCallout = true
-        } else {
-            annotationView?.annotation = annotation
-        }
-        
-        let customPointAnnotation = annotation as! myAnnotation
-        annotationView?.image = UIImage(named: customPointAnnotation.imgPin)
-        
-        return annotationView
-    }
-    /*
     //set region
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         let center = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
@@ -99,22 +69,19 @@ class ViewController: UIViewController,  MKMapViewDelegate {
     //action when annotation is tapped
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let station = view.annotation as! VilloStation
-        let placeName = station.name
-        let placeInfo = station.address
+        self.nameStation.text = station.name
+        self.addressStation.text = station.address
         
-        let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        present(ac, animated: true)
     }
-    */
+    
     //add annotation
     func setAnnotation(station: VilloStation){
-   /*     let annotation = MKPointAnnotation()
+        let annotation = MKPointAnnotation()
         annotation.coordinate = CLLocationCoordinate2D(latitude: station.lat,longitude: station.lng)
         //annotation.title = station.name
         //annotation.subtitle = station.address
      
-        self.myMapView.addAnnotation(annotation)*/
+        self.myMapView.addAnnotation(annotation)
     }
     
     func getData(){
