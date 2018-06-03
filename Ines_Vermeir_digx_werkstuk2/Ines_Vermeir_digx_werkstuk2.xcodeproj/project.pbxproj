@@ -16,6 +16,7 @@
 		C62F819920C2C65A00E10ED9 /* Ines_Vermeir_digx_werkstuk2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C62F819820C2C65A00E10ED9 /* Ines_Vermeir_digx_werkstuk2Tests.swift */; };
 		C62F81A420C2C65A00E10ED9 /* Ines_Vermeir_digx_werkstuk2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C62F81A320C2C65A00E10ED9 /* Ines_Vermeir_digx_werkstuk2UITests.swift */; };
 		C6C2042320C3EE77006920BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C6C2042520C3EE77006920BC /* Localizable.strings */; };
+		C6C2042820C40BB6006920BC /* myAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C2042720C40BB6006920BC /* myAnnotation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		C6C2042220C3EE39006920BC /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		C6C2042420C3EE77006920BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C6C2042620C3EE79006920BC /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C6C2042720C40BB6006920BC /* myAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myAnnotation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			children = (
 				C62F818020C2C65900E10ED9 /* AppDelegate.swift */,
 				C62F818220C2C65900E10ED9 /* ViewController.swift */,
+				C6C2042720C40BB6006920BC /* myAnnotation.swift */,
 				C62F818420C2C65900E10ED9 /* Main.storyboard */,
 				C62F818A20C2C65900E10ED9 /* Assets.xcassets */,
 				C62F818C20C2C65900E10ED9 /* LaunchScreen.storyboard */,
@@ -272,6 +275,7 @@
 			files = (
 				C62F818320C2C65900E10ED9 /* ViewController.swift in Sources */,
 				C62F818920C2C65900E10ED9 /* Ines_Vermeir_digx_werkstuk2.xcdatamodeld in Sources */,
+				C6C2042820C40BB6006920BC /* myAnnotation.swift in Sources */,
 				C62F818120C2C65900E10ED9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

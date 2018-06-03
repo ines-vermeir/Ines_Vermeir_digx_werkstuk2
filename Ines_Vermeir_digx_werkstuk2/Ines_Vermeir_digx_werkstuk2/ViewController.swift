@@ -19,30 +19,76 @@ class ViewController: UIViewController,  MKMapViewDelegate {
     @IBOutlet weak var titleApp: UILabel!
     @IBOutlet weak var updateButton: UIButton!
     
+    var pointAnnotation:myAnnotation!
+    var pinAnnotationView:MKPinAnnotationView!
+
+    //update stations
     @IBAction func update(_ sender: Any) {
         self.getData()
         
     }
     
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        //language
         self.titleApp.text = NSLocalizedString("title", comment: "")
-        self.updateTime.text = NSLocalizedString("last_update", comment: "")
-        self.updateButton.setTitle(NSLocalizedString("update", comment: ""), for: UIControlState.normal)
+         self.updateButton.setTitle(NSLocalizedString("update", comment: ""), for: UIControlState.normal)
         
+        //maps
+        locationManager.delegate = (self as! CLLocationManagerDelegate)
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestAlwaysAuthorization()
-        
         locationManager.startUpdatingLocation()
         
+        myMapView.delegate = self
+        myMapView.mapType = MKMapType.standard
+        myMapView.showsUserLocation = true
+        
+        //get stations
         self.getData()
         
     }
     
+    func locationManager(manager: CLLocationManager, didUpdateLocations userLocation: MKUserLocation) {
+        let location = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
+        let center = location
+        let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025))
+        myMapView.setRegion(region, animated: true)
+        
+        pointAnnotation = myAnnotation()
+        pointAnnotation.imgPin = "Pokemon Pin"
+        pointAnnotation.coordinate = location
+        pointAnnotation.title = "POKéSTOP"
+        pointAnnotation.subtitle = "Pick up some Poké Balls"
+        
+        pinAnnotationView = MKPinAnnotationView(annotation: pointAnnotation, reuseIdentifier: "pin")
+        myMapView.addAnnotation(pinAnnotationView.annotation!)
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print(error.localizedDescription)
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuseIdentifier = "pin"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
+        
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
+            annotationView?.canShowCallout = true
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        let customPointAnnotation = annotation as! myAnnotation
+        annotationView?.image = UIImage(named: customPointAnnotation.imgPin)
+        
+        return annotationView
+    }
+    /*
+    //set region
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         let center = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025))
@@ -50,6 +96,7 @@ class ViewController: UIViewController,  MKMapViewDelegate {
         myMapView.setRegion(region, animated: true)
     }
     
+    //action when annotation is tapped
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let station = view.annotation as! VilloStation
         let placeName = station.name
@@ -59,14 +106,15 @@ class ViewController: UIViewController,  MKMapViewDelegate {
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
     }
-    
+    */
+    //add annotation
     func setAnnotation(station: VilloStation){
-        let annotation = MKPointAnnotation()
+   /*     let annotation = MKPointAnnotation()
         annotation.coordinate = CLLocationCoordinate2D(latitude: station.lat,longitude: station.lng)
         //annotation.title = station.name
         //annotation.subtitle = station.address
      
-        self.myMapView.addAnnotation(annotation)
+        self.myMapView.addAnnotation(annotation)*/
     }
     
     func getData(){
@@ -91,9 +139,11 @@ class ViewController: UIViewController,  MKMapViewDelegate {
             do {
                 if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [[String: AnyObject]] {
                     DispatchQueue.main.async {
+                        //core data
                         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
                         let managedContext = appDelegate.persistentContainer.viewContext
                         
+                        //delete all in core data
                         let delstationFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "VilloStation")
                         let delopgehaaldeStations:[VilloStation]
                         do{
@@ -106,6 +156,7 @@ class ViewController: UIViewController,  MKMapViewDelegate {
                             print("Error")
                         }
                         
+                        //get all from json
                         for station in json {
                             let id = station["number"] as? Int16
                             let name = station["name"] as? String
@@ -116,6 +167,7 @@ class ViewController: UIViewController,  MKMapViewDelegate {
                             let position = station["position"]!
                             let lat = position["lat"] as? Double
                             let lng = position["lng"] as? Double
+                            //add to core data
                             if let station = NSEntityDescription.insertNewObject(forEntityName: "VilloStation", into: managedContext) as? VilloStation {
                                 station.id = id!
                                 station.name = name!
@@ -127,13 +179,18 @@ class ViewController: UIViewController,  MKMapViewDelegate {
                                 station.lng = lng!
                             }
                         }
+                        //save core data
                         do {
                             try managedContext.save()
                         }catch {
                             fatalError("could not save")
                         }
+                        
+                        //change update time
                         let today = Date()
-                        self.updateTime.text = self.updateTime.text! + today.toString(dateFormat: "yyyy-MM-dd HH:mm:ss")
+                        self.updateTime.text = NSLocalizedString("last_update", comment: "") + today.toString(dateFormat: "yyyy-MM-dd HH:mm:ss")
+                        
+                        //get all stations and add them on the map
                         let stationFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "VilloStation")
                         let opgehaaldeStations:[VilloStation]
                         do{
@@ -164,6 +221,8 @@ class ViewController: UIViewController,  MKMapViewDelegate {
 
 }
 
+
+//bron: https://stackoverflow.com/questions/42524651/convert-nsdate-to-string-in-ios-swift/42524767
 extension Date
 {
     func toString( dateFormat format  : String ) -> String
