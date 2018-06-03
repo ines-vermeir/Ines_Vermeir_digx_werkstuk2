@@ -33,7 +33,7 @@ class ViewController: UIViewController,  MKMapViewDelegate {
         
         self.titleApp.text = NSLocalizedString("title", comment: "")
         self.updateTime.text = NSLocalizedString("last_update", comment: "")
-        self.updateButton.titleLabel?.text = NSLocalizedString("update", comment: "")
+        self.updateButton.setTitle(NSLocalizedString("update", comment: ""), for: UIControlState.normal)
         
         locationManager.requestAlwaysAuthorization()
         
